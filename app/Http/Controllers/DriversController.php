@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\drivers;
+use App\Models\Driver;
 use Illuminate\Http\Request;
 
-class DriverController extends Controller
+class DriversController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $drivers = Driver::all();
+        return view('drivers.index', compact('drivers'));
     }
 
     /**
@@ -20,7 +22,7 @@ class DriverController extends Controller
      */
     public function create()
     {
-        //
+        return view('create', compact('dados'));
     }
 
     /**
@@ -28,13 +30,29 @@ class DriverController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request ->validate([
+            'nome' => 'required|string|max:100',
+            'cpf' => 'required|string|unique:drivers,cpf',
+        ]);
+
+        Driver::create($request->all());
+        return redirect()->route('drivers.index')->with('sucess, Driver created succesfully');
+
     }
 
+    public function processSelection(Request $request){
+        $request ->validate([
+            'driver_id' => 'required|exists:drivers,id',
+        ]);
+
+        $driver = Driver::find($request->driver_id);
+        return redirect()->route ('vehicle.create', ['driver' => $driver]);
+
+    }
     /**
      * Display the specified resource.
      */
-    public function show(drivers $drivers)
+    public function show(Driver $drivers)
     {
         //
     }
@@ -42,7 +60,7 @@ class DriverController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(drivers $drivers)
+    public function edit(Driver $drivers)
     {
         //
     }
@@ -50,7 +68,7 @@ class DriverController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, drivers $drivers)
+    public function update(Request $request, Driver $drivers)
     {
         //
     }
@@ -58,7 +76,7 @@ class DriverController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(drivers $drivers)
+    public function destroy(Driver $drivers)
     {
         //
     }

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create ('drivers', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 100);
-            $table->string('cpf', 11)->unique();
+            $table->string('cpf', 14)->unique();
             $table->timestamps();
         });
     }
