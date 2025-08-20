@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\vehicles;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
-class VehicleController extends Controller
+
+class VehiclesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $vehicles = Vehicle::all();
+        return view('vehicles.index', compact('vehicles'));
     }
 
     /**
@@ -20,7 +22,7 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        //
+        return view('vehicles.index', compact('vehicle'));
     }
 
     /**
@@ -28,13 +30,22 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $vehicle = $request->validate([
+            'placa' => 'required|string|max:10|unique:vehicles,placa',
+            'marca' => 'required|string|max:50',
+            'modelo' => 'required|string|max:50',
+            'ano' => 'required|integer|min:1886|max:' . (date('Y')+ 1),
+        ]);
+
+        Vehicle::create($vehicle);
+
+        return redirect(route('vehicles.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(vehicles $vehicles)
+    public function show()
     {
         //
     }
@@ -42,7 +53,7 @@ class VehicleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(vehicles $vehicles)
+    public function edit()
     {
         //
     }
@@ -50,7 +61,7 @@ class VehicleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, vehicles $vehicles)
+    public function update()
     {
         //
     }
@@ -58,7 +69,7 @@ class VehicleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(vehicles $vehicles)
+    public function destroy()
     {
         //
     }

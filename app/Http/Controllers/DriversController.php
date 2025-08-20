@@ -22,7 +22,7 @@ class DriversController extends Controller
      */
     public function create()
     {
-        return view('create', compact('dados'));
+        return view('vehicle_movements', compact('drivers'));
     }
 
     /**
