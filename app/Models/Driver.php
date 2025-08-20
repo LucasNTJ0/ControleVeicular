@@ -8,9 +8,9 @@ class Driver extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'nome' => 'string',
-        'cpf' => 'string',
+    protected $fillable = [
+        'nome', 
+        'cpf',   
     ];
 
     public function vehicles(){
