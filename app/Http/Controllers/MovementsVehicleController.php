@@ -62,7 +62,7 @@ class MovementsVehicleController extends Controller
         ]);
         VehicleMovement::create($request->all());
 
-        return redirect()->route('movements.return')->with('success', 'Movimentação registrada com sucesso');
+        return redirect()->route('movements.index')->with('success', 'Movimentação registrada com sucesso');
     }
     public function returnForm($id)
     {
