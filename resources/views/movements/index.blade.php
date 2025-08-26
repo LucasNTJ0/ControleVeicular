@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="refresh" content="5; url={{ route('movements.index') }}">
     <title>Movimentação</title>
 </head>
 
 <body>
     <h1>Gerenciamento de Movimentações</h1>
     <h2>Registro de Saídas</h2>
-    <table border="1" cellpadding="10">
+    {{-- <table border="1" cellpadding="10">
         <thead>
             <th>Veículo</th>
             <th>Motorista</th>
@@ -36,10 +37,10 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
-    <h1>Movimentações</h1>
+    </table> --}}
+    <h1>Movimentações Recentes</h1>
 
-    <table border="1" cellpadding="6">
+    <table border="1" cellpadding="6" cellspacing="0">
         <thead>
             <tr>
                 <th>Veículo</th>
@@ -62,13 +63,16 @@
                         @if ($movement->data_retorno)
                             {{ $movement->data_retorno }}
                         @else
-                            <span style="color:red;">Não retornado</span>
+                            <span style="color:rgb(33, 0, 223);">Não retornado</span>
                         @endif
                     </td>
-                    
+
                     <td>
                         @if (!$movement->data_retorno)
-                            <a href="{{ route('movements.returnForm', $movement->id) }}">Registrar Retorno</a>
+                            <button
+                                onclick="window.location.href='{{ route('movements.returnForm', $movement->id) }}'">Registrar
+                                Retorno
+                            </button>
                         @endif
                     </td>
                     <td>

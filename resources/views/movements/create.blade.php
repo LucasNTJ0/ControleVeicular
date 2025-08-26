@@ -11,11 +11,6 @@
 <body>
     <h1>Gerenciamento de Movimentações</h1>
     <h1>Registrar Saída de Veículo</h1>
-    @if (session('success'))
-        <div style="color: green; font-weight: bold; margin: 10px 0;">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="form-containerFULL">
         <form action="{{ route('movements.store') }}" method="POST">
@@ -32,11 +27,13 @@
                 </select>
             </div>
             <div>
-                <label for="driver">Motorista</label>
+                <label for="driver">Motorista:</label>
                 <select name="driver_id" id="driver">
-                    <option value="" disabled selected required>Escolha um Motorista</option>
+                    <option value="" disabled selected >Escolha um Motorista</option>
                     @foreach ($drivers as $driver)
-                        <option value="{{ $driver->id }}">{{ $driver->nome }}</option>
+                        <option value="{{ $driver->id }}">
+                            {{ $driver->nome }} - {{ $driver->cpf}}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -50,17 +47,15 @@
                 </select>
             </div>
             <div>
-                <label for="">Data/Hora de Saída</label>
-                <input type="datetime-local" name="data_saida" id="data_saida" required>
-            </div>
-
+                <label for="">Data de Saída</label>
+                <input type="datetime-local" name="data_saida" id="data_saida" value="{{ now()->format('Y-m-d\TH:i') }}" readonly>
             <div>
                 <label for="">Estimativa de Retorno</label>
-                <input type="datetime-local" name="estimativa_retorno" id="estimativa_retorno" required>
+                <input type="datetime-local" name="estimativa_retorno" id="estimativa_retorno" value="{{ now()->format('Y-m-d\TH:i')}}" required>
             </div>
 
 
-            <button type="submit">Registrar Saída</button>
+            <button type="submit" onclick="alert('Saída Registrada com sucesso')">Registrar Saída</button>
             <a href="{{ route('movements.index') }}">Ir para Pagina inicial</a>
 
         </form>
