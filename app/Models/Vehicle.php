@@ -15,6 +15,7 @@ use HasFactory;
         'marca',
         'modelo',
         'ano',
+        'odometro',
     ];
 
 

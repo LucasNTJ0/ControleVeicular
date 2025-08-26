@@ -6,25 +6,26 @@ use App\Models\Driver;
 use App\Models\Reason;
 use App\Models\Vehicle;
 use App\Models\VehicleMovement;;
+
 use Illuminate\Http\Request;
 
 class MovementsVehicleController extends Controller
 {
     /**
      * Display a listing of the resource.
-    */
-    
-    
-    
+     */
 
-    public function index(){
-        
-        $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])->get(); 
-        
+
+
+
+    public function index()
+    {
+
+        $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])->get();
+
         return view('movements.index', compact('movements'));
-        
     }
-        /**$request->validate([
+    /**$request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
             'reason_id' => 'required|exists:reasons,id',
@@ -34,17 +35,18 @@ class MovementsVehicleController extends Controller
             'odometro' => 'required|integer|min:0|after:estimativa_retorno',
             'observacoes' => 'nullable|string|max:255',
         ]); */
-    
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(){
+    public function create()
+    {
         $vehicles = Vehicle::all();
         $drivers = Driver::all();
         $reasons = Reason::all();
-        
-        return view('movements.create', compact('vehicles','drivers','reasons'));
+
+        return view('movements.create', compact('vehicles', 'drivers', 'reasons'));
     }
 
 
@@ -53,7 +55,11 @@ class MovementsVehicleController extends Controller
      */
     public function store(Request $request)
     {
-        $request -> validate([
+
+        $vehicles = Vehicle::find($request->vehicle_id);
+        $vehicles->save();
+
+        $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
             'reason_id' => 'required|exists:reasons,id',
@@ -66,21 +72,35 @@ class MovementsVehicleController extends Controller
     }
     public function returnForm($id)
     {
-        $movement = VehicleMovement::with(['vehicle', 'driver','reason'])->findOrFail($id);
-        
+        $movement = VehicleMovement::with(['vehicle', 'driver', 'reason'])->findOrFail($id);
+
         return view('movements.return', compact('movement'));
     }
 
-    public function returnUpdate(Request $request, $id){
+    public function returnUpdate(Request $request, $id)
+    {
+        $movement = new VehicleMovement;
+        $movement->fill($request->all());
         $movement = VehicleMovement::findOrFail($id);
+        $vehicles = Vehicle::find($movement->vehicle_id);
         
         $movement->data_retorno = $request->input('data_retorno');
         $movement->odometro = $request->input('odometro');
+        $movement->vehicle->odometro = $request->input('odometro');
         $movement->observacao = $request->input('observacao');
-        $movement->save();
-        
+
+
+        if ($movement->odometro < $vehicles->odometro) {
+            return redirect()->back()->withInput()->with('error', 'O valor do odômetro deve ser maior ou igual ao valor de saída.');
+        }
+        else {
+            $vehicles->odometro = $movement->odometro;
+            $vehicles->save();
+            $movement->vehicle->save();
+            $movement->save();
+        }
+        dd($movement);
         return redirect()->route('movements.index')->with('success', 'Retorno registrado');
-        
     }
     /**
      * Display the specified resource.
@@ -101,7 +121,7 @@ class MovementsVehicleController extends Controller
         $drivers = Driver::all();
         $vehicles = Vehicle::all();
 
-        return view('movements.edit', compact ('reasons', 'drivers', 'vehicles', 'movement'));
+        return view('movements.edit', compact('reasons', 'drivers', 'vehicles', 'movement'));
     }
 
     /**

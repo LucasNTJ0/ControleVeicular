@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('marca', 50);
             $table->string('modelo', 50);
             $table->integer('ano');
+            $table->integer('odometro')->default(0);
             $table->timestamps();
         });
     }

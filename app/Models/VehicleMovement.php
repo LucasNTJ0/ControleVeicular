@@ -19,6 +19,13 @@ class VehicleMovement extends Model
         'odometro',
         'observacao',
     ];
+
+    protected $casts = [
+        'data_saida' => 'datetime',
+        'estimativa_retorno' => 'datetime',
+        'data_retorno' => 'datetime',
+    ];
+
     public function vehicle(){
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
