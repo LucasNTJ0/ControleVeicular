@@ -42,9 +42,15 @@ class MovementsVehicleController extends Controller
      */
     public function create()
     {
-        $vehicles = Vehicle::all();
-        $drivers = Driver::all();
+        $vehicles = Vehicle::whereNotIn('id', function ($query) {
+            $query->select('vehicle_id')->from('vehicle_movements')->whereNull('data_retorno');
+        })->get();
+        $drivers = Driver::whereNotIn('id', function ($query) {
+            $query->select('driver_id')->from('vehicle_movements')->whereNull('data_retorno');
+        })->get();
         $reasons = Reason::all();
+
+
 
         return view('movements.create', compact('vehicles', 'drivers', 'reasons'));
     }
@@ -99,7 +105,7 @@ class MovementsVehicleController extends Controller
             $movement->vehicle->save();
             $movement->save();
         }
-        dd($movement);
+        
         return redirect()->route('movements.index')->with('success', 'Retorno registrado');
     }
     /**

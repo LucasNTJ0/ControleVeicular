@@ -51,7 +51,7 @@
                 <input type="datetime-local" name="data_saida" id="data_saida" value="{{ now()->format('Y-m-d\TH:i') }}" readonly>
             <div>
                 <label for="">Estimativa de Retorno</label>
-                <input type="datetime-local" name="estimativa_retorno" id="estimativa_retorno" value="{{ now()->format('Y-m-d\TH:i')}}" required>
+                <input type="datetime-local" name="estimativa_retorno" id="estimativa_retorno" value="{{ now()->format('Y-m-d\TH:i')}}" min="{{ now()->format('Y-m-d\TH:i') }}"   required>
             </div>
 
 
