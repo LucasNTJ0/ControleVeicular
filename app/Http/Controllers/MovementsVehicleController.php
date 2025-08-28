@@ -14,17 +14,37 @@ class MovementsVehicleController extends Controller
     /**
      * Display a listing of the resource.
      */
-
-
-
-
     public function index()
     {
 
-        $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])->get();
+        $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])
+        ->whereNull('data_retorno')
+        ->orderBy('data_saida', 'desc')
+        ->get();
+        
 
-        return view('movements.index', compact('movements'));
+        $allmovements = VehicleMovement::with(['vehicle', 'driver', 'reason'])
+        ->whereNotNull('data_saida')
+        ->orderBy('data_saida', 'desc')
+        ->take(10)
+        ->get();
+
+        return view('movements.index', compact('movements', 'allmovements'));
+
+
     }
+
+
+    public function allMovements()
+    {
+        $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])
+        ->whereNotNull('data_retorno')
+        ->orderBy('data_retorno', 'desc')
+        ->paginate(10);
+        
+        return view('movements.allmovements', compact('movements'));
+    }
+
     /**$request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
@@ -35,7 +55,6 @@ class MovementsVehicleController extends Controller
             'odometro' => 'required|integer|min:0|after:estimativa_retorno',
             'observacoes' => 'nullable|string|max:255',
         ]); */
-
 
     /**
      * Show the form for creating a new resource.
@@ -50,11 +69,8 @@ class MovementsVehicleController extends Controller
         })->get();
         $reasons = Reason::all();
 
-
-
         return view('movements.create', compact('vehicles', 'drivers', 'reasons'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -89,25 +105,30 @@ class MovementsVehicleController extends Controller
         $movement->fill($request->all());
         $movement = VehicleMovement::findOrFail($id);
         $vehicles = Vehicle::find($movement->vehicle_id);
-        
+
         $movement->data_retorno = $request->input('data_retorno');
         $movement->odometro = $request->input('odometro');
         $movement->vehicle->odometro = $request->input('odometro');
         $movement->observacao = $request->input('observacao');
 
 
+
+
         if ($movement->odometro < $vehicles->odometro) {
             return redirect()->back()->withInput()->with('error', 'O valor do odômetro deve ser maior ou igual ao valor de saída.');
-        }
-        else {
+        } else {
             $vehicles->odometro = $movement->odometro;
             $vehicles->save();
             $movement->vehicle->save();
             $movement->save();
         }
-        
+
         return redirect()->route('movements.index')->with('success', 'Retorno registrado');
     }
+
+
+
+
     /**
      * Display the specified resource.
      */
