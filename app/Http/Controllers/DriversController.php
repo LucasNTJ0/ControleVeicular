@@ -22,7 +22,7 @@ class DriversController extends Controller
      */
     public function create()
     {
-        return view('vehicle_movements', compact('drivers'));
+        //return view('vehicle_movements', compact('drivers'));
     }
 
     /**
@@ -40,7 +40,7 @@ class DriversController extends Controller
 
     }
 
-    public function processSelection(Request $request){
+    /*public function processSelection(Request $request){
         $request ->validate([
             'driver_id' => 'required|exists:drivers,id',
         ]);
@@ -48,7 +48,7 @@ class DriversController extends Controller
         $driver = Driver::find($request->driver_id);
         return redirect()->route ('vehicle.create', ['driver' => $driver]);
 
-    }
+    }*/
     /**
      * Display the specified resource.
      */

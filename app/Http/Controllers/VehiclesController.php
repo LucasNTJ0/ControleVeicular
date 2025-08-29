@@ -22,7 +22,7 @@ class VehiclesController extends Controller
      */
     public function create()
     {
-        return view('vehicles.index', compact('vehicle'));
+        /*return view('vehicles.index', compact('vehicle'));*/
     }
 
     /**

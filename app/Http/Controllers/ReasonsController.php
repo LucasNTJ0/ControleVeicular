@@ -20,9 +20,9 @@ class ReasonsController extends Controller
      * Show the form for creating a new resource.
      */
     public function create(){
-        $reasons = Reason::all();
+    /* $reasons = Reason::all();
         $reasons = Reason::orderBy('descricao')->get();
-        return view('vehicle_movements', compact('reasons'));
+        return view('vehicle_movements', compact('reasons'));*/
     }
     /**
      * Store a newly created resource in storage.
