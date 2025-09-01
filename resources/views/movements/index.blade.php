@@ -9,12 +9,17 @@
     {{-- <meta http-equiv="refresh" content="250; url={{ route('movements.index') }}"> --}}
     <title>Tela Inicial</title>
 </head>
+<header>
+    <h1 class="h1-principal">Controle de Veículos</h1>
+</header>
 
-<body class="bg-blue-200">
-    <div>
-        <h1 class="h1-principal">Gerenciamento de Movimentações</h1>
+<body class="bg-blue-50">
+    <div class="div-button">
+        <a class="button-default" id="saida-button" href="{{ route('movements.create') }}"> + Registrar Saída</a>
+    </div>
+    <div class="table-movements">
         <h2 class="h2-principal">Registros sem Retorno</h2>
-        <table id="table-container" class="table-default">
+        <table class="table-default">
             <thead>
                 <tr class="bg-gray-200">
                     <th class="th-default">Veículo</th>
@@ -41,7 +46,7 @@
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
-                        <td class="td-default">{{ $movement->estimativa_retorno }}</td>
+                        <td class="td-default"> {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}</td>
                         <td class="td-default ">
                             @if ($movement->data_retorno)
                                 <span style="color:rgb(6, 52, 179);">✅</span>
@@ -53,10 +58,11 @@
                         </td>
                         <td class="td-default">
                             @if (!$movement->data_retorno)
-                                <button
-                                    onclick="window.location.href='{{ route('movements.returnForm', $movement->id) }}'">Registrar
+                                <a id="return-button"
+                                    onclick="window.location.href='{{ route('movements.returnForm', $movement->id) }}'">
+                                    ↩ Registrar
                                     Retorno
-                                </button>
+                                </a>
                             @endif
                         </td>
                     </tr>
@@ -64,9 +70,7 @@
             </tbody>
         </table>
     </div>
-    <div>
-        <a class="h2-principal" href="{{ route('movements.create') }}">Registrar Saída</a>
-    </div>
+
     <div>
         <h1 class="h2-principal">Últimas 10 Movimentações</h1>
         <table class="table-default">
@@ -96,7 +100,7 @@
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
-                        <td class="td-default">{{ $movement->data_retorno }}</td>
+                        <td class="td-default"> {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}</td>
 
                         <td class="td-default">
                             @if ($movement->data_retorno)
@@ -113,8 +117,8 @@
         </table>
     </div>
     <br>
-    <div>
-        <a class="h2-principal" href="{{ route('movements.allmovements') }}">Todas Movimentações</a>
+    <div id="allmovements-button" class="div-button">
+        <a class="button-default" href="{{ route('movements.allmovements') }}">Visualizar Todas Movimentações</a>
     </div>
 
 </body>

@@ -16,14 +16,36 @@
     @apply border-collapse  border border-gray-400 w-[72.5%] mx-auto h-2/3;
 }
 .th-default {
-    @apply border border-gray-500 px-4 py-2.5;
+    @apply border border-gray-500 px-4 py-2.5 cursor-context-menu;
 }
 .td-default {
-    @apply border border-gray-400 px-4 py-2;
+    @apply border border-gray-400 px-4 py-2 cursor-context-menu; 
 }
 .h1-principal {
     @apply font-bold text-3xl text-center bg-blue-100 border border-gray-400 rounded-md py-3 px-3 m-px;
 }
 .h2-principal {
-    @apply font-semibold text-2xl text-center m-1 p-1;
+    @apply font-semibold text-2xl text-left text-center m-1 p-1 py-5 pb-0 pl-50;
 }
+.button-default {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded flex items-center justify-center  ;
+}
+.div-button {
+    @apply flex items-center justify-center px-0 pt-3;
+}
+#allmovements-button {
+    @apply justify-center pb-5 pt-0; 
+}
+
+#return-button {
+    @apply bg-blue-600 hover:bg-blue-800 text-white font-bold cursor-pointer
+        w-full py-2 px-4 rounded-full
+        flex items-center justify-center transition;
+}
+#saida-button {
+    @apply absolute  bg-blue-600 hover:bg-blue-800 text-white font-bold cursor-pointer
+        py-2 px-4 
+        flex items-center justify-center transition
+        top-23.5;
+}
+

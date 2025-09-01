@@ -5,29 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @vite('resources/css/app.css')
     <title>Movimentações</title>
 </head>
-<body>
-    <div>
-        <a href="{{ route('movements.index')}}">Início</a>
+<body class="bg-blue-50">
+    <div class="div-button">
+        <a class="button-default" href="{{ route('movements.index')}}">Início</a>
     </div>
-    <div>
-        <h1>Todas as Movimentações Finalizadas</h1>
-        <table border="1" cellpadding="8" cellspacing="0">
+    <div class="table-movements">
+        <h1 class="h2-principal">Todas as Movimentações Finalizadas</h1>
+        <table class="table-default">
             <thead>
-                <th>Veículo</th>
-                <th>Motorista</th>
-                <th>Motivo</th>
-                <th>Saída</th>
-                <th>Estimativa de Retorno</th>
-                <th>Retorno</th>
-                <th>Valor <br> Odômetro</th>
-                <th>Observações</th>
+                <tr class="bg-gray-200">
+                    <th class="th-default">Veículo</th>
+                    <th class="th-default">Motorista</th>
+                    <th class="th-default">Motivo</th>
+                    <th class="th-default">Saída</th>
+                    <th class="th-default">Estimativa de Retorno</th>
+                    <th class="th-default">Retorno</th>
+                    <th class="th-default">Valor <br> Odômetro</th>
+                    <th class="th-default">Observações</th>
+                </tr>
             </thead>
             <tbody>
                 @foreach ($movements as $movement)
-                    <tr>
-                        <td>
+                    <tr class="hover:bg-gray-50 bg-white">
+                        <td class="td-default">
                             {{ $movement->vehicle->placa }} :
                             {{ $movement->vehicle->modelo == 'Bongo'
                                 ? 'Bongo 🚚'
@@ -39,13 +42,13 @@
                                             ? 'Daily 🚛'
                                             : $movement->vehicle->modelo))) }}
                         </td>
-                        <td>{{ $movement->driver->nome }}</td>
-                        <td>{{ $movement->reason->descricao }}</td>
-                        <td>{{ $movement->data_saida }}</td>
-                        <td>{{ $movement->estimativa_retorno }}</td>
-                        <td>{{ $movement->data_retorno }}</td>
-                        <td>{{ $movement->odometro }}</td>
-                        <td>{{ $movement->observacao }}</td>
+                        <td class="td-default">{{ $movement->driver->nome }}</td>
+                        <td class="td-default">{{ $movement->reason->descricao }}</td>
+                        <td class="td-default">{{ $movement->data_saida }}</td>
+                        <td class="td-default">{{ $movement->estimativa_retorno }}</td>
+                        <td class="td-default">{{ $movement->data_retorno }}</td>
+                        <td class="td-default">{{ $movement->odometro }}</td>
+                        <td class="td-default">{{ $movement->observacao }}</td>
                     </tr>
                 @endforeach
             </tbody>
