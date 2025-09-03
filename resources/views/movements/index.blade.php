@@ -42,18 +42,22 @@
                                         ? 'Cobalt🚗'
                                         : ($movement->vehicle->modelo == 'Daily'
                                             ? 'Daily🚛'
-                                            : $movement->vehicle->modelo))) }}
+                                            : ($movement->vehicle->modelo == 'Lead'
+                                                ? 'Lead🛵'
+                                                : $movement->vehicle->modelo)))) }}
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
-                        <td class="td-default"> {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}</td>
+                        <td class="td-default">
+                            {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}
+                        </td>
                         <td class="td-default ">
                             @if ($movement->data_retorno)
                                 <span style="color:rgb(6, 52, 179);">✅</span>
                             @elseif (now() > $movement->estimativa_retorno)
-                                <span style="color:rgb(167, 8, 8);">🚨</span>
+                                <span style="color:rgb(167, 8, 8);">⚠</span>
                             @else
-                                <span style="color:rgb(40, 158, 11)">🚧</span>
+                                <span style="color:rgb(40, 158, 11)">⏳</span>
                             @endif
                         </td>
                         <td class="td-default">
@@ -100,7 +104,9 @@
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
-                        <td class="td-default"> {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}</td>
+                        <td class="td-default">
+                            {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}
+                        </td>
 
                         <td class="td-default">
                             @if ($movement->data_retorno)

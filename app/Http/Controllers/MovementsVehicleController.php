@@ -86,7 +86,7 @@ class MovementsVehicleController extends Controller
             'driver_id' => 'required|exists:drivers,id',
             'reason_id' => 'required|exists:reasons,id',
             'data_saida' => 'required|date',
-            'estimativa_retorno' => 'required|date',
+            'estimativa_retorno' => 'required|date:after:data_saida',
         ]);
         VehicleMovement::create($request->all());
 
