@@ -11,15 +11,20 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .table-default {
     @apply border-collapse  border border-gray-400 w-[72.5%] mx-auto h-2/3;
 }
 .th-default {
-    @apply border border-gray-500 px-4 py-2.5 cursor-context-menu;
+    @apply border border-gray-500 px-4 py-2.5 cursor-context-menu 
+    ;
 }
 .td-default {
-    @apply border border-gray-400 px-4 py-2 cursor-context-menu; 
+    @apply border border-gray-400 px-4 py-2 cursor-context-menu
+     ;
 }
 .h1-principal {
     @apply font-bold text-3xl text-center bg-blue-100 border border-gray-400 rounded-md py-3 px-3 m-px;
@@ -70,4 +75,23 @@
 }
 #h2-principal {
     @apply font-semibold text-2xl text-center m-1 p-1 py-5 pb-0;
+}
+
+.div-status {
+    @apply flex flex-col items-center gap-1 text-gray-800;
+}
+
+.status-concluido {
+    @apply flex flex-col items-center gap-1 text-green-700 border;
+}
+
+#status-atraso {
+    @apply text-red-600 border border-red-300 bg-red-200 rounded-lg m-0.5 p-0.5;
+}
+
+.td-default-status {
+    @apply border border-gray-400 px-4 py-2 cursor-context-menu;
+}
+#status-uso {
+    @apply text-yellow-600 border border-yellow-300 bg-yellow-200 rounded-lg m-0.5 p-0.5;
 }

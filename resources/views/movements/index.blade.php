@@ -51,15 +51,25 @@
                         <td class="td-default">
                             {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}
                         </td>
-                        <td class="td-default ">
+                        <td class="td-default-status">
                             @if ($movement->data_retorno)
-                                <span style="color:rgb(6, 52, 179);">✅</span>
+                                <div class="div-status">
+                                    <span>✅</span>
+                                    <span id="status-concluido">Concluído</span>
+                                </div>
                             @elseif (now() > $movement->estimativa_retorno)
-                                <span style="color:rgb(167, 8, 8);">⚠</span>
+                                <div class="div-status">
+                                    <span class="text-2xl">⚠</span>
+                                    <span id="status-atraso">Atrasado</span>
+                                </div>
                             @else
-                                <span style="color:rgb(40, 158, 11)">⏳</span>
+                                <div class="div-status">
+                                    <span class="text-2xl">⏳</span>
+                                    <span id="status-uso">Em uso</span>
+                                </div>
                             @endif
                         </td>
+
                         <td class="td-default">
                             @if (!$movement->data_retorno)
                                 <a id="return-button"
@@ -105,16 +115,27 @@
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
                         <td class="td-default">
-                            {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}
+                            {{ $movement->data_retorno ? $movement->data_retorno->format('d/m/Y H:i') : '-' }}
                         </td>
 
-                        <td class="td-default">
+
+
+                        <td class="td-default-status">
                             @if ($movement->data_retorno)
-                                <span style="color:rgb(6, 52, 179);">✅</span>
+                                <div class="div-status">
+                                    <span>✅</span>
+                                    <span id="status-concluido">Concluído</span>
+                                </div>
                             @elseif (now() > $movement->estimativa_retorno)
-                                <span style="color:rgb(167, 8, 8);">🚨</span>
+                                <div class="div-status">
+                                    <span class="text-2xl">⚠</span>
+                                    <span id="status-atraso">Atrasado</span>
+                                </div>
                             @else
-                                <span style="color:rgb(40, 158, 11)">🚧</span>
+                                <div class="div-status">
+                                    <span class="text-2xl">⏳</span>
+                                    <span id="status-uso">Em uso</span>
+                                </div>
                             @endif
                         </td>
                     </tr>
