@@ -25,14 +25,14 @@
                     <th class="th-default">Veículo</th>
                     <th class="th-default">Motorista</th>
                     <th class="th-default">Motivo</th>
-                    <th class="th-default">Estimativa de Retorno</th>
+                    <th class="th-default">Retorno Estimado</th>
                     <th class="th-default">Status</th>
                     <th class="th-default">Ação</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($movements as $movement)
-                    <tr class="hover:bg-gray-50 bg-white">
+                    <tr class="tr-default">
                         <td class="td-default">{{ $movement->vehicle->placa }} :
                             {{ $movement->vehicle->modelo == 'Bongo'
                                 ? 'Bongo🚚'
@@ -55,21 +55,20 @@
                             @if ($movement->data_retorno)
                                 <div class="div-status">
                                     <span>✅</span>
-                                    <span id="status-concluido">Concluído</span>
+                                    <span class="status-concluido">Concluído</span>
                                 </div>
                             @elseif (now() > $movement->estimativa_retorno)
                                 <div class="div-status">
                                     <span class="text-2xl">⚠</span>
-                                    <span id="status-atraso">Atrasado</span>
+                                    <span class="status-atraso">Atrasado</span>
                                 </div>
                             @else
                                 <div class="div-status">
                                     <span class="text-2xl">⏳</span>
-                                    <span id="status-uso">Em uso</span>
+                                    <span class="status-uso">Andamento</span>
                                 </div>
                             @endif
                         </td>
-
                         <td class="td-default">
                             @if (!$movement->data_retorno)
                                 <a id="return-button"
@@ -99,7 +98,7 @@
             </thead>
             <tbody>
                 @foreach ($allmovements as $movement)
-                    <tr class="hover:bg-gray-50 bg-white">
+                    <tr class="tr-default">
                         <td class="td-default">
                             {{ $movement->vehicle->placa }} :
                             {{ $movement->vehicle->modelo == 'Bongo'
@@ -115,26 +114,25 @@
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
                         <td class="td-default">
-                            {{ $movement->data_retorno ? $movement->data_retorno->format('d/m/Y H:i') : '-' }}
+                            {{ $movement->data_retorno ? date('d/m/Y H:i', strtotime($movement->data_retorno)) : '' }}
                         </td>
-
 
 
                         <td class="td-default-status">
                             @if ($movement->data_retorno)
                                 <div class="div-status">
                                     <span>✅</span>
-                                    <span id="status-concluido">Concluído</span>
+                                    <span class="status-concluido">Concluído</span>
                                 </div>
                             @elseif (now() > $movement->estimativa_retorno)
                                 <div class="div-status">
                                     <span class="text-2xl">⚠</span>
-                                    <span id="status-atraso">Atrasado</span>
+                                    <span class="status-atraso">Atrasado</span>
                                 </div>
                             @else
                                 <div class="div-status">
                                     <span class="text-2xl">⏳</span>
-                                    <span id="status-uso">Em uso</span>
+                                    <span class="status-uso">Andamento</span>
                                 </div>
                             @endif
                         </td>

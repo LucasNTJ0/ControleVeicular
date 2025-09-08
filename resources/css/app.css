@@ -11,20 +11,15 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .table-default {
     @apply border-collapse  border border-gray-400 w-[72.5%] mx-auto h-2/3;
 }
 .th-default {
-    @apply border border-gray-500 px-4 py-2.5 cursor-context-menu 
-    ;
+    @apply border border-gray-500 px-4 py-2.5 cursor-context-menu;
 }
 .td-default {
-    @apply border border-gray-400 px-4 py-2 cursor-context-menu
-     ;
+    @apply border border-gray-400 px-4 py-2 cursor-context-menu; 
 }
 .h1-principal {
     @apply font-bold text-3xl text-center bg-blue-100 border border-gray-400 rounded-md py-3 px-3 m-px;
@@ -76,22 +71,41 @@
 #h2-principal {
     @apply font-semibold text-2xl text-center m-1 p-1 py-5 pb-0;
 }
-
 .div-status {
-    @apply flex flex-col items-center gap-1 text-gray-800;
-}
-
-.status-concluido {
-    @apply flex flex-col items-center gap-1 text-green-700 border;
-}
-
-#status-atraso {
-    @apply text-red-600 border border-red-300 bg-red-200 rounded-lg m-0.5 p-0.5;
+    @apply flex flex-col items-center text-gray-800;
 }
 
 .td-default-status {
-    @apply border border-gray-400 px-4 py-2 cursor-context-menu;
+    @apply border border-gray-400 cursor-context-menu; 
 }
-#status-uso {
-    @apply text-yellow-600 border border-yellow-300 bg-yellow-200 rounded-lg m-0.5 p-0.5;
+
+.status-concluido {
+    @apply flex flex-col items-center gap-1 border bg-green-50 border-green-200 text-green-600 rounded-lg m-1 p-0.5;
+}
+
+.status-atraso {
+    @apply flex flex-col items-center gap-1 
+    border bg-red-50 border-red-200 text-red-600 rounded-lg m-0.5 p-0.5;
+}
+.status-uso {
+    @apply flex flex-col items-center gap-1 border bg-yellow-50 border-yellow-200 text-yellow-600 rounded-lg m-1 p-0.5;
+}
+
+.tr-default{
+    @apply border hover:bg-gray-50 bg-white text-center font-medium text-base;
+}
+#h2-return {
+    @apply text-center text-3xl font-medium p-1 m-1 ;
+}
+.p-return {
+    @apply indent-8 font-medium;
+}
+.p2-return {
+    @apply indent-1 font-normal;
+}
+.input-return {
+    @apply border border-gray-400 bg-blue-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+#form-return {
+    @apply max-w-2xl mx-auto bg-white p-6 rounded-lg shadow;
 }

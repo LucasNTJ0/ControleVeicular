@@ -6,7 +6,8 @@ use App\Http\Controllers\DriversController;
 use App\Http\Controllers\ReasonsController;
 use App\Http\Controllers\VehiclesController;
 
-Route::get('/', [MovementsVehicleController::class, 'index'])->name('movements.index');
+
+Route::get('/', [MovementsVehicleController::class, 'index']);
 Route::get('/movements/allmovements', [MovementsVehicleController::class, 'allMovements'])
 ->name('movements.allmovements');
 

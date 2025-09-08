@@ -1,35 +1,29 @@
-# Imagem oficial PHP-FPM
+# Start from the official PHP-FPM image
 FROM php:8.3-fpm
 
-# Argumento para o grupo
+# Define the build argument for the group ID
 ARG WWWGROUP=1000
 
-# Criar usuário 'sail'
-RUN groupadd -g ${WWWGROUP:-1000} sail || true \
-    && useradd -ms /bin/bash -g sail -u 1337 sail
+# Create the 'sail' group and user with the specified IDs
+RUN groupadd -g ${WWWGROUP:-1000} sail || true \ && useradd -ms /bin/bash -g sail -u 1337 sail
 
-# Instalar dependências do Laravel
-RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libjpeg-dev libfreetype6-dev zip curl \
-    && docker-php-ext-install pdo pdo_mysql gd bcmath
+# Install PHP extensions for Laravel
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Instalar Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Definir diretório de trabalho
-WORKDIR /var/www/html
+# Define the working directory
+WORKDIR /the/workdir/path
 
-# Copiar apenas os arquivos de dependências primeiro (cache melhorado)
-COPY composer.json composer.lock ./
-
-# Instalar dependências do Laravel (sem dev, otimizado)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
-# Copiar restante do código Laravel
+# Copy the application files into the container
 COPY . .
 
-# Ajustar permissões para Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Run Composer installation
+RUN composer install --no-dev --optimize-autoloader
 
-# PHP-FPM como comando padrão
+# Set file permissions for the web server user
+RUN chown -R www-data:www-data /the/workdir/path /var/www/storage
+
+# Start PHP-FPM when the container runs
 CMD ["php-fpm"]
