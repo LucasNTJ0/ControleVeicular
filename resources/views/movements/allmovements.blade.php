@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +8,13 @@
     @vite('resources/css/app.css')
     <title>Movimentações</title>
 </head>
+<header>
+    <h1 class="h1-principal">Controle de Veículos</h1>
+</header>
+
 <body class="bg-blue-50">
     <div class="div-button">
-        <a class="button-default" href="{{ route('movements.index')}}">Início</a>
+        <a class="button-default" href="{{ route('movements.index') }}">Início</a>
     </div>
     <div class="table-movements">
         <h1 class="h2-principal">Todas as Movimentações Finalizadas</h1>
@@ -29,7 +33,7 @@
             </thead>
             <tbody>
                 @foreach ($movements as $movement)
-                    <tr class="hover:bg-gray-50 bg-white">
+                    <tr class="tr-default">
                         <td class="td-default">
                             {{ $movement->vehicle->placa }} :
                             {{ $movement->vehicle->modelo == 'Bongo'
@@ -40,13 +44,18 @@
                                         ? 'Cobalt🚗'
                                         : ($movement->vehicle->modelo == 'Daily'
                                             ? 'Daily 🚛'
-                                            : $movement->vehicle->modelo))) }}
+                                            : ($movement->vehicle->modelo == 'Lead'
+                                                ? 'Lead🛵'
+                                                : $movement->vehicle->modelo)))) }}
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
-                        <td class="td-default">{{ $movement->data_saida }}</td>
-                        <td class="td-default">{{ $movement->estimativa_retorno }}</td>
-                        <td class="td-default">{{ $movement->data_retorno }}</td>
+                        <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_saida)->format('d/m/Y H:i') }}
+                        </td>
+                        <td class="td-default">
+                            {{ \Carbon\Carbon::parse($movement->estimativa_retorno)->format('d/m/Y H:i') }}</td>
+                        <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_retorno)->format('d/m/Y H:i') }}
+                        </td>
                         <td class="td-default">{{ $movement->odometro }}</td>
                         <td class="td-default">{{ $movement->observacao }}</td>
                     </tr>
@@ -54,8 +63,15 @@
             </tbody>
         </table>
     </div>
-    <div>
-        {{ $movements->links() }}
+    <div class="flex justify-center mt-4">
+        @foreach ($movements->links()->elements[0] as $page => $url)
+            @if ($page == $movements->currentPage())
+                <span class="button-default">{{ $page }}</span>
+            @else
+                <a href="{{ $url }}" class="button-default">{{ $page }}</a>
+            @endif
+        @endforeach
     </div>
 </body>
+
 </html>

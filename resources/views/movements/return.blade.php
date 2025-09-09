@@ -23,11 +23,46 @@
 
             {{-- Dados do movimento --}}
             <div class="form-return space-y-2">
-                <div><span class="p-return">Veículo:</span> <span class="p2-return">{{ $movement->vehicle->placa }} : {{ $movement->vehicle->modelo }}</span></div>
-                <div><span class="p-return">Motorista:</span> <span class="p2-return">{{ $movement->driver->nome }}</span></div>
-                <div><span class="p-return">Motivo:</span> <span class="p2-return">{{ $movement->reason->descricao }}</span></div>
-                <div><span class="p-return">Data de Saída:</span> <span class="p2-return">{{ $movement->data_saida->format('d/m/Y H:i') }}</span></div>
-                <div><span class="p-return">Último Valor de Odômetro:</span> <span class="p2-return">{{ $movement->vehicle->odometro }}</span></div>
+                <div class="">
+                    <span class="p-return">
+                        Veículo:
+                    </span>
+                    <span class="p2-return">
+                        {{ $movement->vehicle->placa }} : {{ $movement->vehicle->modelo }}
+                    </span>
+                </div>
+                <div>
+                    <span class="p-return">
+                        Motorista:
+                    </span>
+                    <span class="p2-return">
+                        {{ $movement->driver->nome }}
+                    </span>
+                </div>
+                <div>
+                    <span class="p-return">
+                        Motivo:
+                    </span>
+                    <span class="p2-return">
+                        {{ $movement->reason->descricao }}
+                    </span>
+                </div>
+                <div>
+                    <span class="p-return">
+                        Data de Saída:
+                    </span>
+                    <span class="p2-return">
+                        {{ $movement->data_saida->format('d/m/Y H:i') }}
+                    </span>
+                </div>
+                <div>
+                    <span class="p-return">
+                        Último Valor de Odômetro:
+                    </span>
+                    <span class="p2-return">
+                        {{ $movement->vehicle->odometro }}
+                    </span>
+                </div>
             </div>
 
             {{-- Inputs de retorno --}}
@@ -39,8 +74,8 @@
 
             <div class="flex flex-col gap-1">
                 <label class="p-return">Odômetro:</label>
-                <input type="number" name="odometro" class="input-return"
-                    placeholder="quilometragem atual do veículo" value="{{ old('vehicle_id', $movement->odometro) }}" required>
+                <input type="number" name="odometro" class="input-return" placeholder="Quilometragem Atual"
+                    value="{{ old('vehicle_id', $movement->odometro) }}" required>
             </div>
 
             <div class="flex flex-col gap-1">
@@ -51,7 +86,7 @@
             {{-- Botão --}}
             <div class="pt-2">
                 <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow w-full">
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow w-full cursor-pointer">
                     Finalizar Retorno
                 </button>
             </div>

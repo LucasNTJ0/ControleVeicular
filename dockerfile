@@ -1,29 +1,56 @@
-# Start from the official PHP-FPM image
-FROM php:8.3-fpm
+# ================================
+# 1º estágio: frontend (Node + Tailwind/Vite)
+# ================================
+FROM node:18 AS frontend
 
-# Define the build argument for the group ID
-ARG WWWGROUP=1000
+WORKDIR /app
 
-# Create the 'sail' group and user with the specified IDs
-RUN groupadd -g ${WWWGROUP:-1000} sail || true \ && useradd -ms /bin/bash -g sail -u 1337 sail
+# Copia apenas package.json e package-lock.json
+COPY package*.json ./
 
-# Install PHP extensions for Laravel
-RUN docker-php-ext-install pdo pdo_mysql
+# Instala dependências do frontend
+RUN npm config set fetch-retry-maxtimeout 120000 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm install
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Define the working directory
-WORKDIR /the/workdir/path
-
-# Copy the application files into the container
+# Copia todo o restante do projeto (exceto node_modules, ignorado pelo .dockerignore)
 COPY . .
 
-# Run Composer installation
+# Build dos assets do Tailwind/Vite
+RUN npm run build
+
+
+# ================================
+# 2º estágio: backend (PHP + Composer)
+# ================================
+FROM php:8.3-fpm
+
+# Argumento para grupo do host
+ARG WWWGROUP=1000
+
+# Cria usuário sail (opcional, mas recomendado)
+RUN groupadd -g ${WWWGROUP:-1000} sail || true \
+    && useradd -ms /bin/bash -g sail -u 1337 sail
+
+# Instala extensões do PHP
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Instala Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Copia arquivos do backend
+COPY . .
+
+# Copia assets do frontend
+COPY --from=frontend /app/public/build ./public/build
+
+# Instala dependências PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Set file permissions for the web server user
-RUN chown -R www-data:www-data /the/workdir/path /var/www/storage
+# Ajusta permissões
+RUN chown -R www-data:www-data /var/www/html /var/www/html/storage
 
-# Start PHP-FPM when the container runs
 CMD ["php-fpm"]
