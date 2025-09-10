@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 echo "Ajustando permissões de storage e cache..."
