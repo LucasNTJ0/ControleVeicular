@@ -8,13 +8,10 @@ WORKDIR /app
 # Copia apenas package.json e package-lock.json
 COPY package*.json ./
 
-# Instala dependências do frontend
-RUN npm config set fetch-retry-maxtimeout 120000 \
-    && npm config set fetch-retry-mintimeout 20000 \
-    && npm install
+# Instala dependências do frontend de forma reprodutível
+RUN npm ci
 
-
-# Copia todo o restante do projeto (exceto node_modules, ignorado pelo .dockerignore)
+# Copia todo o restante do projeto (exceto o que está no .dockerignore)
 COPY . .
 
 # Build dos assets do Tailwind/Vite
@@ -36,6 +33,14 @@ RUN groupadd -g ${WWWGROUP:-1000} sail || true \
 # Instala extensões do PHP
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Instala extensões do PHP e dependências extras
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql zip \
+    && rm -rf /var/lib/apt/lists/*
+
 # Instala Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -47,10 +52,20 @@ COPY . .
 # Copia assets do frontend
 COPY --from=frontend /app/public/build ./public/build
 
-# Instala dependências PHP
+# Instala dependências PHP (somente produção)
 RUN composer install --no-dev --optimize-autoloader
 
-# Ajusta permissões
-RUN chown -R www-data:www-data /var/www/html /var/www/html/storage
 
-CMD ["php-fpm"]
+# Ajusta permissões
+RUN chown -R www-data:www-data /var/www/html /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Configura o PHP-FPM para escutar em todas interfaces
+RUN sed -i 's/listen = .*/listen = 0.0.0.0:9000/' /usr/local/etc/php-fpm.d/www.conf
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Inicia o PHP-FPM em foreground (modo recomendado para Docker)
+CMD ["php-fpm", "-F"]

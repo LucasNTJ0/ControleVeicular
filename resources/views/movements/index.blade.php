@@ -109,7 +109,9 @@
                                         ? 'Cobalt🚗'
                                         : ($movement->vehicle->modelo == 'Daily'
                                             ? 'Daily 🚛'
-                                            : $movement->vehicle->modelo))) }}
+                                            : ($movement->vehicle->modelo == 'Lead'
+                                                ? 'Lead🛵'
+                                                : $movement->vehicle->modelo)))) }}
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
