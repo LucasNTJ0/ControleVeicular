@@ -5,7 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
+    @if (app()->environment('local'))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        @php
+            $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);
+        @endphp
+        <link rel="stylesheet" href="{{ asset('build/' . $manifest['resources/css/app.css']['file']) }}">
+        <script src="{{ asset('build/' . $manifest['resources/js/app.js']['file']) }}" defer></script>
+    @endif
+
     <title>Registrar Saída</title>
 </head>
 
@@ -55,11 +64,11 @@
                     value="{{ now()->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}" required>
             </div>
             <div class=" text-gray-900 text-base font-medium mb-1 pt-2 pl-4">
-                <label for="">Data de Saída:  </label>
+                <label for="">Data de Saída: </label>
                 <input type="datetime-local" name="data_saida" id="data_saida"
                     value="{{ now()->format('Y-m-d\TH:i') }}" readonly>
             </div>
-            <div class="flex justify-center" >
+            <div class="flex justify-center">
                 <button class="button-default" type="submit">Registrar Saída</button>
             </div>
             <a class="flex justify-center" href="{{ route('movements.index') }}">Ir para Pagina inicial</a>
