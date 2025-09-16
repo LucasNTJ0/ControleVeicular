@@ -113,3 +113,9 @@
 #form-return {
     @apply max-w-2xl mx-auto bg-white p-6 rounded-lg shadow;
 }
+#error-odometro {
+    @apply mt-1;
+}
+.button-minor {
+    @apply bg-blue-600 hover:bg-blue-800 text-white font-bold m-2 py-1 px-2 rounded flex items-center justify-center cursor-pointer ;
+}

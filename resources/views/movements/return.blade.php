@@ -23,7 +23,7 @@
     <h1 class="h1-principal">Controle de Veículos</h1>
 </header>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 ">
     <h1 id="h2-return" class="text-xl font-semibold text-center mt-6 mb-4">Registrar Retorno do Veículo</h1>
 
     <div class="form-containerfull max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
@@ -84,8 +84,12 @@
 
             <div class="flex flex-col gap-1">
                 <label class="p-return">Odômetro:</label>
-                <input type="number" name="odometro" class="input-return" placeholder="Quilometragem Atual"
-                    value="{{ old('vehicle_id', $movement->odometro) }}" required>
+                <input type="number" name="odometro" class="input-return @error('odometro') !border-red-600 @enderror"
+                    placeholder="Quilometragem Atual" value="{{ old('odometro', $movement->odometro) }}" required>
+
+                @error('odometro')
+                    <span id="error-odometro" class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="flex flex-col gap-1">
