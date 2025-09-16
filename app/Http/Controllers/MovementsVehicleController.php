@@ -8,9 +8,11 @@ use App\Models\Vehicle;
 use App\Models\VehicleMovement;
 use illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use App\Traits\HandlesAtomicLocks;
 
 class MovementsVehicleController extends Controller
 {
+    use HandlesAtomicLocks;
     /**
      * Display a listing of the resource.
      */
@@ -78,32 +80,55 @@ class MovementsVehicleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
             'reason_id' => 'required|exists:reasons,id',
             'data_saida' => 'required|date',
-            
-            // 2. As regras para 'estimativa_retorno' devem estar dentro de um array
             'estimativa_retorno' => [
-                'required',
-                'date',
-                
+                'required', 'date', 'after:data_saida',
                 function ($attribute, $value, $fail) use ($request) {
                     $estimativa = Carbon::parse($value);
                     $saida = Carbon::parse($request->input('data_saida'));
-                    $minutesDifference = $estimativa->diffInMinutes($saida);
-                    if ($minutesDifference < 10)  {
+                    if (abs($estimativa->diffInMinutes($saida, false)) < 10) {
                         $fail('A estimativa de retorno deve ser de no mínimo 10 minutos.');
                     }
                 },
-            ], 
+            ],
         ]);
-        
-        VehicleMovement::create($request->all());
 
-        return redirect()->route('movements.index')->with('success', 'Movimentação registrada com sucesso');
+        $lockKey = 'movement_for_vehicle_' . $validatedData['vehicle_id'];
+
+        $wasSuccessful = $this->withLock($lockKey, function () use ($validatedData) {
+            
+            // 1. Verificação de disponibilidade corrigida e simplificada
+            $isNotAvailable = VehicleMovement::whereNull('data_retorno')
+                ->where(function ($query) use ($validatedData) {
+                    $query->where('vehicle_id', $validatedData['vehicle_id'])
+                        ->orWhere('driver_id', $validatedData['driver_id']);
+                })
+                ->exists();
+
+            // 2. Lógica corrigida: Se NÃO estiver disponível, falha.
+            if ($isNotAvailable) {
+                return false; // Falha, pois o veículo ou motorista já está em uso
+            }
+
+            // Se estiver disponível, cria o registro e retorna sucesso.
+            VehicleMovement::create($validatedData);
+            return true;
+        });
+
+        if ($wasSuccessful) {
+            return redirect()->route('movements.index')->with('success', 'Movimentação registrada com sucesso!');
+        } else {
+            return redirect()->route('movements.index');
+        }
+        
+        // 3. Código inalcançável removido daqui.
     }
+
+
 
     public function returnForm($id)
     {
@@ -113,45 +138,53 @@ class MovementsVehicleController extends Controller
     }
 
     public function returnUpdate(Request $request, $id)
-{
-    // 1. Encontra o movimento e o veículo associado a ele
-    $movement = VehicleMovement::findOrFail($id);
-    $vehicles = $movement->vehicle; // Acessa o veículo pela relação já carregada
+    {
+        // 1. A validação dos dados do formulário continua sendo o primeiro passo.
+        $movementForValidation = VehicleMovement::findOrFail($id);
+        $dadosValidados = $request->validate([
+            'odometro' => 'required|numeric|gte:' . $movementForValidation->vehicle->odometro,
+            'data_retorno' => 'required|date',
+            'observacao' => 'nullable|string',
+        ], [
+            'odometro.gte' => 'O odômetro de retorno deve ser maior ou igual ao de saída (' . $movementForValidation->vehicle->odometro . ' Km).',
+        ]);
 
-    // 2. Guarda o valor do odômetro ANTES de qualquer modificação
-    $ultimo_odometro = $vehicles->odometro;
+        // 2. Cria a chave de bloqueio única para esta movimentação.
+        $lockKey = 'updating_return_for_movement_' . $id;
 
-    // 3. VALIDAÇÃO PRIMEIRO!
-    //    Compara o 'odometro' do formulário com o valor antigo do banco.
-    $dadosValidados = $request->validate([
-        'odometro' => 'required|numeric|gte:' . $ultimo_odometro,
-        'data_retorno' => 'required|date',
-        'observacao' => 'nullable|string', // Observação é opcional
-    ], [
-        // Mensagem de erro personalizada
-        'odometro.gte' => 'O odômetro de retorno deve ser maior ou igual ao de saída (' . $ultimo_odometro . ' Km).',
-    ]);
+        // 3. Executa a lógica de atualização dentro da trava atômica (sintaxe corrigida).
+        $wasSuccessful = $this->withLock($lockKey, function () use ($dadosValidados, $id) {
+            
+            // Re-buscamos o movimento DENTRO da trava para garantir o estado mais atual.
+            $movement = VehicleMovement::find($id);
 
-    // 4. Se a validação passou, o código continua. Agora atualizamos os dados.
-    
-    // Atualiza o registro do movimento
-    $movement->data_retorno = $dadosValidados['data_retorno'];
-    $movement->observacao = $dadosValidados['observacao'];
-    // O odômetro do movimento é o de SAÍDA, então não o alteramos aqui.
-    // Se precisar registrar o odômetro de retorno no movimento, crie uma coluna nova (ex: odometro_retorno)
+            // 4. Lógica de verificação simplificada e corrigida.
+            // Se o movimento existe E o retorno ainda não foi registrado...
+            if ($movement && is_null($movement->data_retorno)) {
+                
+                // ...então atualizamos os dados.
+                $movement->data_retorno = $dadosValidados['data_retorno'];
+                $movement->observacao = $dadosValidados['observacao'];
+                $movement->vehicle->odometro = $dadosValidados['odometro'];
 
-    // Atualiza o odômetro principal do veículo
-    $vehicles->odometro = $dadosValidados['odometro'];
+                $movement->save();
+                $movement->vehicle->save();
 
-    // 5. Salva as alterações nos dois modelos
-    $movement->save();
-    $vehicles->save();
+                return true; // Sucesso!
+            }
 
-    // 6. Redireciona para uma página de sucesso com uma mensagem flash
-    return redirect()->route('movements.index')->with('success', 'Retorno do veículo registrado com sucesso!');
-}
-
-
+            // Se a condição acima for falsa (movimento não existe ou já foi retornado), falha.
+            return false;
+        });
+        
+        // 5. Lida com o resultado da operação de forma clara.
+        if ($wasSuccessful) {
+            return redirect()->route('movements.index')->with('success', 'Retorno do veículo registrado com sucesso!');
+        } else {
+            // Redireciona de volta para o formulário com o erro.
+            return redirect()->route('movements.index');
+        }
+    }
 
 
     /**

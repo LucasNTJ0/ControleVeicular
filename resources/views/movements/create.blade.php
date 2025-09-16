@@ -36,7 +36,7 @@
                     <select name="vehicle_id" id="vehicle" class="form-select ">
                         <option value="" disabled selected required>Escolha um Veículo</option>
                         @foreach ($vehicles as $vehicle)
-                            <option value="{{ $vehicle->id }}">
+                            <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected': '' }}>
                                 {{ $vehicle->modelo }} {{ $vehicle->placa }}
                             </option>
                         @endforeach
@@ -47,7 +47,7 @@
                     <select name="driver_id" id="driver" class="form-select">
                         <option value="" disabled selected class="form-select">Escolha um Motorista</option>
                         @foreach ($drivers as $driver)
-                            <option value="{{ $driver->id }}">
+                            <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected': '' }}>
                                 {{ $driver->nome }} - {{ $driver->cpf }}
                             </option>
                         @endforeach
@@ -58,7 +58,9 @@
                     <select name="reason_id" id="reason" class="form-select">
                         <option value="" disabled selected required>Escolha um Motivo</option>
                         @foreach ($reasons as $reason)
-                            <option value="{{ $reason->id }}">{{ $reason->descricao }}</option>
+                            <option value="{{ $reason->id }}" {{ old('reason_id') == $reason->id ? 'selected': '' }}>
+                                {{ $reason->descricao }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
