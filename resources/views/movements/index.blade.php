@@ -35,6 +35,7 @@
                     <th class="th-default">Veículo</th>
                     <th class="th-default">Motorista</th>
                     <th class="th-default">Motivo</th>
+                    <th class="th-default">Saída</th>
                     <th class="th-default">Retorno Estimado</th>
                     <th class="th-default">Status</th>
                     <th class="th-default">Ação</th>
@@ -58,6 +59,7 @@
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
+                        <td class="td-default">{{ date('d/m/Y H:i', strtotime($movement->data_saida)) }}</td>
                         <td class="td-default">
                             {{ $movement->estimativa_retorno ? date('d/m/Y H:i', strtotime($movement->estimativa_retorno)) : '-' }}
                         </td>
