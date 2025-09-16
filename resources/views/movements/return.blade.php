@@ -25,7 +25,10 @@
 
 <body class="bg-gray-50 ">
     <h1 id="h2-return" class="text-xl font-semibold text-center mt-6 mb-4">Registrar Retorno do Veículo</h1>
-
+    <div class="w-full max-w-sm mx-auto flex flex-col items-start gap-2">
+            <div class=" absolute button-minor">
+                <a href="{{ route('movements.index') }}">↩</a>
+            </div>
     <div class="form-containerfull max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
         <form action="{{ route('movements.return', $movement->id) }}" method="POST" class="space-y-4">
             @csrf
