@@ -161,6 +161,9 @@
     </div>
 
 </body>
+<footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600 border-t">
+    Versão {{ config('app.version') }}
+</footer>
 
 <footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600 border-t">
     Versão {{ config('app.version') }} 
