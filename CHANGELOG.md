@@ -6,13 +6,10 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
-## [1.2.0] - 2025-09-18
+## [1.1.2] - 2025-09-18
 
 ### Corrigido (Fixed)
-- Corrige a mensagem de validação exibida no campo estimativa de retorno.
-
-### Adicionado (Added)
-- Adicionado a versão atual do sistema no rodapé de cada página.
+- Corrige a mensagem de validação exibida no campo de data de partida.
 
 ---
 
