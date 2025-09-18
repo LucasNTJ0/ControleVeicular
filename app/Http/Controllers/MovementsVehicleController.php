@@ -62,7 +62,6 @@ class MovementsVehicleController extends Controller
 
         return view('movements.create', compact('vehicles', 'drivers', 'reasons'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -83,6 +82,10 @@ class MovementsVehicleController extends Controller
 
                     $estimativa = Carbon::parse($value);
                     $saida = Carbon::parse($request->input('data_saida'));
+
+                    if ($estimativa->isBefore($saida)) {
+                        $fail('A estimativa de retorno deve ser posterior à data de saída.');
+                    }
 
                     if (abs($estimativa->diffInMinutes($saida, false)) < 10) {
                         $fail('A estimativa de retorno deve ser de no mínimo 10 minutos.');
