@@ -36,7 +36,6 @@ class MovementsVehicleController extends Controller
 
     }
 
-
     public function allMovements()
     {
         $movements = VehicleMovement::with(['vehicle', 'driver', 'reason'])
@@ -46,17 +45,6 @@ class MovementsVehicleController extends Controller
         
         return view('movements.allmovements', compact('movements'));
     }
-
-    /**$request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'driver_id' => 'required|exists:drivers,id',
-            'reason_id' => 'required|exists:reasons,id',
-            'data_saida' => 'required|date',
-            'estimativa_retorno' => 'required|date',
-            'data_retorno' => 'nullable|date|after:data_saida',
-            'odometro' => 'required|integer|min:0|after:estimativa_retorno',
-            'observacoes' => 'nullable|string|max:255',
-        ]); */
 
     /**
      * Show the form for creating a new resource.
@@ -74,7 +62,6 @@ class MovementsVehicleController extends Controller
 
         return view('movements.create', compact('vehicles', 'drivers', 'reasons'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -86,10 +73,20 @@ class MovementsVehicleController extends Controller
             'reason_id' => 'required|exists:reasons,id',
             'data_saida' => 'required|date',
             'estimativa_retorno' => [
-                'required', 'date', 'after:data_saida',
+                'required', 'date',
                 function ($attribute, $value, $fail) use ($request) {
+
+                    if(empty($value) || empty($request->input('data_saida'))){
+                        return; // Se algum dos campos estiver vazio, não faz a validação adicional aqui.
+                    }
+
                     $estimativa = Carbon::parse($value);
                     $saida = Carbon::parse($request->input('data_saida'));
+
+                    if ($estimativa->isBefore($saida)) {
+                        $fail('A estimativa de retorno deve ser posterior à data de saída.');
+                    }
+
                     if (abs($estimativa->diffInMinutes($saida, false)) < 10) {
                         $fail('A estimativa de retorno deve ser de no mínimo 10 minutos.');
                     }
@@ -109,7 +106,7 @@ class MovementsVehicleController extends Controller
                 })
                 ->exists();
 
-            // 2. Lógica corrigida: Se NÃO estiver disponível, falha.
+            // Se NÃO estiver disponível, falha.
             if ($isNotAvailable) {
                 return false; // Falha, pois o veículo ou motorista já está em uso
             }
@@ -125,7 +122,6 @@ class MovementsVehicleController extends Controller
             return redirect()->route('movements.index');
         }
         
-        // 3. Código inalcançável removido daqui.
     }
 
 
