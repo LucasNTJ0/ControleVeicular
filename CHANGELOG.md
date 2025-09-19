@@ -6,6 +6,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.1] - 2025-09-19
+
+### Corrigido (Fixed)
+- Corrige a mensagem de visualização da versão atual no rodapé das páginas. 
+
+---
+
 ## [1.2.0] - 2025-09-18
 
 ### Corrigido (Fixed)

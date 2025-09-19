@@ -123,6 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'version' => trim(exec('git describe --tags --exact-match 2>/dev/null')) ?: 'dev',
+    'version' => trim(shell_exec('git describe --tags --always 2>/dev/null') ?: 'dev'),
+
 
 ];
