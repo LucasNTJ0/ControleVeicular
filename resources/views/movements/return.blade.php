@@ -19,11 +19,11 @@
 
 </head>
 
-<header>
-    <h1 class="h1-principal">Controle de Veículos</h1>
-</header>
 
 <body class="bg-gray-50 ">
+    <header>
+        <h1 class="h1-principal">Controle de Veículos</h1>
+    </header>
     <h1 id="h2-return" class="text-xl font-semibold text-center mt-6 mb-4">Registrar Retorno do Veículo</h1>
     <div class="w-full max-w-sm mx-auto flex flex-col items-start gap-2">
             <div class=" absolute button-minor">
@@ -109,9 +109,9 @@
             </div>
         </form>
     </div>
+    <footer class="w-full py-3 text-center text-xs text-gray-600 mt-auto">
+        Versão {{ config('app.version') }} 
+    </footer>
 </body>
-<footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600 border-t">
-    Versão {{ config('app.version') }} 
-</footer>
 
 </html>
