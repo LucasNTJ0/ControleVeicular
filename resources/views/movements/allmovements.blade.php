@@ -18,11 +18,11 @@
 
     <title>Movimentações</title>
 </head>
+<header>
+    <h1 class="h1-principal">Controle de Veículos</h1>
+</header>
 
 <body class="bg-blue-50">
-    <header>
-        <h1 class="h1-principal">Controle de Veículos</h1>
-    </header>
     <div class="div-button">
         <a class="button-default" href="{{ route('movements.index') }}">Início</a>
     </div>
@@ -47,27 +47,25 @@
                         <td class="td-default">
                             {{ $movement->vehicle->placa }} :
                             {{ $movement->vehicle->modelo == 'Bongo'
-                                ? 'Bongo 🚚'
-                                : ($movement->vehicle->modelo == 'Strada'
-                                    ? 'Strada 🚙'
-                                    : ($movement->vehicle->modelo == 'Cobalt'
-                                        ? 'Cobalt🚗'
-                                        : ($movement->vehicle->modelo == 'Daily'
-                                            ? 'Daily 🚛'
-                                            : ($movement->vehicle->modelo == 'Lead'
-                                                ? 'Lead🛵'
-                                                : ($movement->vehicle->modelo == 'Express'
-                                                    ? 'Express🚚'
-                                                    : $movement->vehicle->modelo))))) }}
+                                    ? 'Bongo🚐'
+                                    : ($movement->vehicle->modelo == 'Strada'
+                                        ? 'Strada🛻'
+                                        : ($movement->vehicle->modelo == 'Cobalt'
+                                            ? 'Cobalt🚗'
+                                            : ($movement->vehicle->modelo == 'Daily'
+                                                ? 'Daily🚛'
+                                                : ($movement->vehicle->modelo == 'Lead'
+                                                    ? 'Lead🛵'
+                                                    : ($movement->vehicle->modelo == 'Express'
+                                                        ? 'Express🚚'
+                                                        : $movement->vehicle->modelo))))) }}
                         </td>
                         <td class="td-default">{{ $movement->driver->nome }}</td>
                         <td class="td-default">{{ $movement->reason->descricao }}</td>
                         <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_saida)->format('d/m/Y H:i') }}
                         </td>
-                        <td class="td-default">
-                            {{ \Carbon\Carbon::parse($movement->estimativa_retorno)->format('d/m/Y H:i') }}</td>
-                        <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_retorno)->format('d/m/Y H:i') }}
-                        </td>
+                        <td class="td-default">{{ \Carbon\Carbon::parse($movement->estimativa_retorno)->format('d/m/Y H:i') }}</td>
+                        <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_retorno)->format('d/m/Y H:i') }}</td>
                         <td class="td-default">{{ $movement->odometro }}</td>
                         <td class="td-default">{{ $movement->observacao }}</td>
                     </tr>
@@ -84,8 +82,8 @@
             @endif
         @endforeach
     </div>
-    <footer class="w-full py-3 text-center text-xs text-gray-600 mt-auto">
-        Versão {{ config('app.version') }} 
-    </footer>
 </body>
+<footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600 border-t">
+    Versão {{ config('app.version') }} 
+</footer>
 </html>

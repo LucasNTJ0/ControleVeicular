@@ -15,8 +15,7 @@
         <script src="{{ asset('build/' . $manifest['resources/js/app.js']['file']) }}" defer></script>
     @endif
 
-
-    {{-- <meta http-equiv="refresh" content="250; url={{ route('movements.index') }}"> --}}
+    <meta http-equiv="refresh" content="250; url={{ route('movements.index') }}">
     <title>Tela Inicial</title>
 </head>
 
@@ -116,9 +115,9 @@
                             <td class="td-default">
                                 {{ $movement->vehicle->placa }} :
                                 {{ $movement->vehicle->modelo == 'Bongo'
-                                    ? 'Bongo 🚚'
+                                    ? 'Bongo 🚐'
                                     : ($movement->vehicle->modelo == 'Strada'
-                                        ? 'Strada 🚙'
+                                        ? 'Strada 🛻'
                                         : ($movement->vehicle->modelo == 'Cobalt'
                                             ? 'Cobalt🚗'
                                             : ($movement->vehicle->modelo == 'Daily'
