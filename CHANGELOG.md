@@ -1,16 +1,20 @@
-# Registro de Alterações
-
-Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
-
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
-
----
-
 # Changelog
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) e este projeto adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [1.3.1] - 2025-09-23
+
+### Corrigido
+
+- Corrige a inconsistência no padrão de emoji dos veículos em todas as páginas que contêm tabelas.
+
+### Adicionado
+
+- Implementa a função na página inicial que reseta a página em um período de tempo, atualizando o status.
 
 ---
 
