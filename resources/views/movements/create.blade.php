@@ -19,7 +19,7 @@
 </head>
 
 
-<body>
+<body class="bg-blue-50">
     <header>
         <h1 class="h1-principal">Gerenciamento de Movimentações</h1>
     </header>
@@ -74,7 +74,7 @@
                         min="{{ now()->addMinutes(10)->format('Y-m-d\TH:i') }}" required>
 
                     @error('estimativa_retorno')
-                        <span id="mt-1" class="text-red-600 text-sm">{{ $message }}</span>
+                        <span id="mt-1" class="danger-message">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class=" text-gray-900 text-base font-medium mb-1 pt-2 pl-4 text-center ">

@@ -139,46 +139,54 @@ public function returnUpdate(Request $request, $id)
 {
     // 1. Busca o movimento e o odômetro ATUAL do veículo para validação.
     $movementForValidation = VehicleMovement::findOrFail($id);
-
+    
+    $odometroAtual = $movementForValidation->vehicle->odometro;
+    $odometroMax = $odometroAtual + 10000;
+    $odometroAviso = $odometroAtual + 999;
+    $odometroFormatado = number_format($movementForValidation->vehicle->odometro, 0, ',', '.');
+    $warningMessage = "O valor do odômetro está muito acima do último registrado ({$odometroFormatado} km). Se estiver correto, por favor, confirme.";
     // 2. A sua validação original já está correta para este cenário.
     //    Ela garante que o novo odômetro é maior ou igual ao último registrado no veículo.
     $dadosValidados = $request->validate([
-        'odometro' => 'required|numeric|gte:' . $movementForValidation->vehicle->odometro,
+        'odometro' => 'required|numeric|max:' . $odometroMax . '| gte:' . $odometroAtual,
         'data_retorno' => 'required|date',
         'observacao' => 'nullable|string',
     ], [
-        'odometro.gte' => 'O odômetro de retorno deve ser maior ou igual ao último registrado (' . $movementForValidation->vehicle->odometro . ' Km).',
+        'odometro.gte' => 'O odômetro de retorno deve ser maior ou igual ao último registrado (' . $odometroFormatado . ' Km).',
+        'odometro.max' => 'O valor inserido está muito acima do último registrado (' . $odometroFormatado . ' Km). Por favor, verifique e corrija o valor inserido.',
     ]);
 
+
+    if($dadosValidados['odometro'] >= $odometroAviso && !$request->input('confirm_odometro')){
+        session()->flash('warning', $warningMessage);
+        return redirect()->back()->withInput();
+    }
+    
+    
     $lockKey = 'updating_return_for_movement_' . $id;
 
+    
     // 3. Executa a lógica de atualização de forma segura.
     $wasSuccessful = $this->withLock($lockKey, function () use ($dadosValidados, $id) {
         
         $movement = VehicleMovement::find($id);
-
+        
         if ($movement && is_null($movement->data_retorno)) {
             
             $movement->data_retorno = $dadosValidados['data_retorno'];
             $movement->observacao = $dadosValidados['observacao'];
-
-            // --- CORREÇÃO SIMPLES E DIRETA AQUI ---
-
+            
             // A) Preenche o odômetro que estava faltando NA MOVIMENTAÇÃO.
-            //    (Assumindo que a coluna se chama 'odometro')
             $movement->odometro = $dadosValidados['odometro'];
-
             // B) Atualiza o odômetro principal DO VEÍCULO.
             $movement->vehicle->odometro = $dadosValidados['odometro'];
-
-            // --- FIM DA CORREÇÃO ---
-
+            
             $movement->save();
             $movement->vehicle->save();
-
+            
             return true;
         }
-
+        
         return false;
     });
     
