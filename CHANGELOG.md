@@ -6,6 +6,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [1.4.0] - 2025-09-25
+
+### Adicionado
+
+- **Melhoria na formatação e legibilidade de números:**
+    - Adicionada formatação com pontuação (separador de milhar) em todos os valores numéricos exibidos no sistema, facilitando a leitura de grandes números.
+    - Implementada a formatação automática da quilometragem com pontuação enquanto o usuário digita, melhorando a experiência de inserção de dados.
+
+---
+
 ## [1.3.1] - 2025-09-23
 
 ### Corrigido

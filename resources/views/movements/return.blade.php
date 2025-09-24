@@ -73,7 +73,7 @@
                             Último Valor de Odômetro:
                         </span>
                         <span class="p2-return">
-                            {{ $movement->vehicle->odometro }}
+                            {{ number_format($movement->vehicle->odometro, 0, ',', '.') }} Km
                         </span>
                     </div>
                 </div>
@@ -87,39 +87,44 @@
 
                 <div class="flex flex-col gap-1">
                     <label class="p-return">Odômetro:</label>
-                    <input type="number" name="odometro"
+                    <input type="text" name="odometro" inputmode="numeric"
                         class="input-return @error('odometro') !border-red-600 @enderror"
-                        placeholder="Quilometragem Atual" value="{{ old('odometro', $movement->odometro) }}" required>
+                        placeholder="Quilometragem Atual"
+                        value="{{ old('odometro', $movement->odometro > 0 ? number_format($movement->odometro, 0, ',', '.'): '') }}"
+                        required
+                        oninput="this.value = this.value
+                        .replace(/[^0-9]/g, '')             
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // adiciona pontos como separador">
 
                     @error('odometro')
                         <span id="error-odometro" class="danger-message">{{ $message }}</span>
                     @enderror
 
-                    @if(session('warning'))
-                    <div class="warning-message" role="alert">
-                        {{ session('warning') }}
-                    </div>
-                    <input type="hidden" name="confirm_odometro" value="true">
+                    @if (session('warning'))
+                        <div class="warning-message" role="alert">
+                            {{ session('warning') }}
+                        </div>
+                        <input type="hidden" name="confirm_odometro" value="true">
                     @endif
-            </div>
+                </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="p-return">Observações:</label>
-                <textarea name="observacao" rows="2" class="input-return resize-y" placeholder="Digite observações adicionais...">{{old('observacao')}}</textarea>
-            </div>
+                <div class="flex flex-col gap-1">
+                    <label class="p-return">Observações:</label>
+                    <textarea name="observacao" rows="2" class="input-return resize-y" placeholder="Digite observações adicionais...">{{ old('observacao') }}</textarea>
+                </div>
 
-            {{-- Botão --}}
-            <div class="pt-2">
-                <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow w-full cursor-pointer">
-                    Finalizar Retorno
-                </button>
-            </div>
-        </form>
-    </div>
-    <footer class="w-full py-3 text-center text-xs text-gray-600 mt-auto">
-        Versão {{ config('app.version') }}
-    </footer>
+                {{-- Botão --}}
+                <div class="pt-2">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow w-full cursor-pointer">
+                        Finalizar Retorno
+                    </button>
+                </div>
+            </form>
+        </div>
+        <footer class="w-full py-3 text-center text-xs text-gray-600 mt-auto">
+            Versão {{ config('app.version') }}
+        </footer>
 </body>
 
 </html>
