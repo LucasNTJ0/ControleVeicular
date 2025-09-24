@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @reference "tailwindcss";
 
+body {
+    @apply font-sans;
+}
+
 .table-default {
     @apply border-collapse  border border-gray-400 w-[72.5%] mx-auto h-2/3;
 }

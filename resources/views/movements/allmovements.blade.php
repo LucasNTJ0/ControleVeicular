@@ -66,7 +66,7 @@
                         </td>
                         <td class="td-default">{{ \Carbon\Carbon::parse($movement->estimativa_retorno)->format('d/m/Y H:i') }}</td>
                         <td class="td-default">{{ \Carbon\Carbon::parse($movement->data_retorno)->format('d/m/Y H:i') }}</td>
-                        <td class="td-default">{{ $movement->odometro }}</td>
+                        <td class="td-default">{{  number_format($movement->odometro, 0, ',', '.') }}</td>
                         <td class="td-default">{{ $movement->observacao }}</td>
                     </tr>
                 @endforeach
@@ -83,7 +83,7 @@
         @endforeach
     </div>
 </body>
-<footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600 border-t">
+<footer class="w-full bg-gray-100 py-3 text-center text-xs text-gray-600">
     Versão {{ config('app.version') }} 
 </footer>
 </html>
